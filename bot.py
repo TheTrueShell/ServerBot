@@ -1,4 +1,4 @@
- # Deps
+# Deps
 # External Imports
 import server
 import socket
@@ -70,7 +70,7 @@ async def wakePC():
 # Pings User
 async def pingUser(ctx):
     user = ctx.message.author.mention
-    message = await ctx.send("{}: You have a notification.".format(user))
+    message = await ctx.send(f"{user}: You have a notification.")
     await message.delete()
 
 
@@ -92,11 +92,7 @@ async def startServer(ctx, botmessage, currentServer):
     online = await serverOnline(currentServer)
     if online:
         msStatus = await serverStatus(currentServer)
-        alreadyActive = discord.Embed(
-            title=serverTitle,
-            description="Server already `ONLINE` with `" + str(
-                msStatus.players.online) + "` people playing.",
-            color=discord.Color.green())
+        alreadyActive = discord.Embed(title=serverTitle, description=f"Server already `ONLINE` with `{str(msStatus.players.online)}` people playing.", color=discord.Color.green())
         await botmessage.edit(embed=alreadyActive)
     else:
         hwAlive = await check_ping()
@@ -174,9 +170,7 @@ async def onlineLoop(ctx, botmessage, currentServer: server):
         color=discord.Color.green())
     failedScreen = discord.Embed(
         title=serverTitle,
-        description="{0}: Server failed to boot in time. Please contact <@618876946830589963>".format(
-            ctx.message.author.mention,
-            currentServer.name),
+        description=f"{ctx.message.author.mention}: Server failed to boot in time. Please contact <@{bot.owner_id}>",
         color=discord.Color.dark_red())
     for _ in range(36):
         if await serverOnline(currentServer):
@@ -192,7 +186,7 @@ async def serverOnline(currentServer: server):
     ms = mcstatus.MinecraftServer.lookup(currentServer.address)
     try:
         ms.ping()
-    except:
+    except Exception:
         return False
     return True
 
@@ -201,7 +195,7 @@ async def serverStatus(currentServer: server):
     try:
         ms = mcstatus.MinecraftServer.lookup(currentServer.address)
         msStatus = ms.query()
-    except:
+    except Exception:
         msStatus = None
     return msStatus
 
@@ -273,7 +267,7 @@ async def update_status():
     with open("server_statuses.json", "r") as file:
         try:
             data = json.load(file)
-        except:
+        except Exception:
             data = {'onlinePlayers': 0, 'onlineServers': 0}
         onlinePlayers = data["onlinePlayers"]
         onlineServers = data["onlineServers"]
